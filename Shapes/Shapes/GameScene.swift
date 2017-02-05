@@ -13,7 +13,7 @@ class GameScene: SKScene {
     
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
-    
+    let colors = [SKColor.yellow,SKColor.red,SKColor.blue,SKColor.purple]
     override func didMove(to view: SKView) {
         setupPlayerAndObstacles()
     }
@@ -40,18 +40,30 @@ class GameScene: SKScene {
         
         path.addArc(withCenter: CGPoint.zero, radius: 200, startAngle: CGFloat(0), endAngle: CGFloat(3.0 * M_PI_2), clockwise: false)
         
-        let section = SKShapeNode(path: path.cgPath)
-        section.position = CGPoint(x:size.width/2, y:size.height/2)
-        section.fillColor = .yellow
-        section.strokeColor = .yellow
-        addChild(section)
+        let obstacle = obstacleByDuplicatingPath(path, clockwise: true)
+        obstacle.position = CGPoint(x:size.width/2, y:size.height/2)
+        addChild(obstacle)
+       
+    }
+    
+    
+    func obstacleByDuplicatingPath(_ path:UIBezierPath, clockwise:Bool) -> SKNode{
+        let container = SKNode()
         
-        let section2 = SKShapeNode(path: path.cgPath)
-        section2.position = CGPoint(x: size.width/2, y: size.height/2)
-        section2.fillColor = .red
-        section2.strokeColor = .red
-        section2.zRotation = CGFloat(M_PI)
-        addChild(section2)
+        var rotationFactor = CGFloat(M_PI_2)
+        if !clockwise{
+            rotationFactor *= -1
+        }
+        
+        for i in 0...3 {
+            let section = SKShapeNode(path: path.cgPath)
+            section.fillColor = colors[i]
+            section.strokeColor = colors[i]
+            section.zRotation = rotationFactor * CGFloat(i)
+            
+            container.addChild(section)
+        }
+        return container
     }
     
     
