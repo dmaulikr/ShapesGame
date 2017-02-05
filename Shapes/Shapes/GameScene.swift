@@ -11,15 +11,48 @@ import GameplayKit
 
 class GameScene: SKScene {
     
+    
+    struct PhysicsCategory {
+        static let Player: UInt32 = 1
+        static let Obstacle: UInt32 = 2
+        static let Edge: UInt32 = 4
+    }
+    
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
     let colors = [SKColor.yellow,SKColor.red,SKColor.blue,SKColor.purple]
+    let player = SKShapeNode(circleOfRadius: 40)
+    
     override func didMove(to view: SKView) {
         setupPlayerAndObstacles()
+        
+        
+        let playerBody = SKPhysicsBody(circleOfRadius: 30)
+        playerBody.mass = 1.5
+        playerBody.categoryBitMask = PhysicsCategory.Player
+        player.physicsBody = playerBody
+        
+        let ledge = SKNode()
+        ledge.position = CGPoint(x:size.width/2, y:160)
+        let ledgeBody = SKPhysicsBody(rectangleOf: CGSize(width: 200, height: 10))
+        ledgeBody.isDynamic = false
+        ledgeBody.categoryBitMask = PhysicsCategory.Edge
+        ledge.physicsBody = ledgeBody
+        addChild(ledge)
+        
+        physicsWorld.gravity.dy = -22
+        
     }
     
     func setupPlayerAndObstacles(){
+        addPlayer()
         addObstacle()
+    }
+    func addPlayer(){
+        player.fillColor = .blue
+        player.strokeColor = player.fillColor
+        player.position = CGPoint(x:size.width/2,y:200)
+        addChild(player)
     }
     func addObstacle()
     {
@@ -69,5 +102,10 @@ class GameScene: SKScene {
         return container
     }
     
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        player.physicsBody?.velocity.dy = 800.0
+        
+    }
     
 }
