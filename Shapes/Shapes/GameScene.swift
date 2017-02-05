@@ -43,6 +43,9 @@ class GameScene: SKScene {
         let obstacle = obstacleByDuplicatingPath(path, clockwise: true)
         obstacle.position = CGPoint(x:size.width/2, y:size.height/2)
         addChild(obstacle)
+        
+        let rotationAction = SKAction.rotate(byAngle: 2.0 * CGFloat(M_PI), duration: 8.0)
+        obstacle.run(SKAction.repeatForever(rotationAction))
        
     }
     
